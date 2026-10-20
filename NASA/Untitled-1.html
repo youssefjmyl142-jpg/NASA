@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Mission Design Game | NASA Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #030712;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --accent: #06b6d4;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #818cf8, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            color: var(--text-main);
+            border-right: 4px solid var(--primary);
+            padding-right: 12px;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            background: rgba(30, 41, 59, 0.85);
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
+        }
+
+        .card.selected {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.25);
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .stats-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-group {
+            margin-bottom: 12px;
+        }
+
+        .stat-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .stat-label strong {
+            color: var(--text-main);
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+        .ai-banner {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(6, 182, 212, 0.12));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
+
+        .btn-modern:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+        }
+
+        .result-card {
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-card.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .result-card.danger {
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        .result-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .result-card ul {
+            text-align: right;
+            display: inline-block;
+            margin: 10px 0;
+            color: #f87171;
+            font-size: 0.95rem;
+        }
+
+        .result-card li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🚀 Space Mission Design Game</h1>
+        <p>محاكاة الهندسة الفضائية - NASA Space Apps Challenge</p>
+    </header>
+
+    <!-- Step 1: Destination -->
+    <div id="step-1" class="step active">
+        <h2>اختر هدف المهمة الفضائية</h2>
+        <div class="grid-options">
+            <div class="card" onclick="selectMission('Mars Exploration', 120, 60, 90)">
+                <h3>🔴 استكشاف المريخ</h3>
+                <p>ميزانية: $120M • وزن أقصى: 60 طن • طاقة مطلوبة: 90 kW</p>
+            </div>
+            <div class="card" onclick="selectMission('Lunar Base', 80, 40, 60)">
+                <h3>🌕 بناء قاعدة قمرية</h3>
+                <p>ميزانية: $80M • وزن أقصى: 40 طن • طاقة مطلوبة: 60 kW</p>
+            </div>
+            <div class="card" onclick="selectMission('Asteroid Flyby', 100, 50, 75)">
+                <h3>☄️ تحليق قريب من كويكب</h3>
+                <p>ميزانية: $100M • وزن أقصى: 50 طن • طاقة مطلوبة: 75 kW</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Customization -->
+    <div id="step-2" class="step">
+        <h2>تخصيص الصاروخ والمعدات العلمية</h2>
+        
+        <div class="stats-panel">
+            <div class="stat-group">
+                <div class="stat-label"><span>💰 الميزانية المتبقية</span><strong id="budget-text">0 M$</strong></div>
+                <div class="progress-track"><div id="bar-budget" class="progress-fill" style="background: var(--success);"></div></div>
+            </div>
+            <div class="stat-group">
+                <div class="stat-label"><span>⚖️ الكتلة الكلية</span><strong><span id="mass-text">0</span> / <span id="max-mass-text">0</span> طن</strong></div>
+                <div class="progress-track"><div id="bar-mass" class="progress-fill" style="background: var(--warning);"></div></div>
+            </div>
+            <div class="stat-group">
+                <div class="stat-label"><span>⚡ الطاقة (المتاحة / المطلوبة)</span><strong><span id="power-text">0</span> / <span id="req-power-text">0</span> kW</strong></div>
+                <div class="progress-track"><div id="bar-power" class="progress-fill" style="background: var(--accent);"></div></div>
+            </div>
+        </div>
+
+        <div class="ai-banner">
+            <i class="fa-solid fa-robot" style="font-size: 1.3rem; color: var(--accent);"></i>
+            <div id="ai-msg">أهلاً بك! ابدأ باختيار نظام الإطلاق للصاروخ المناسب للحمولة.</div>
+        </div>
+
+        <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-muted);">1. نظام الإطلاق (الصاروخ):</h3>
+        <div class="grid-options" style="margin-bottom: 15px;">
+            <div class="card" id="rocket-Heavy" onclick="selectRocket('Heavy', 50, 35)">
+                <h3>🚀 صاروخ ثقيل (Heavy Launch)</h3>
+                <p>تكلفة: $50M • وزن الصاروخ: 35 طن</p>
+            </div>
+            <div class="card" id="rocket-Light" onclick="selectRocket('Light', 25, 20)">
+                <h3>🚀 صاروخ خفيف (Falcon Light)</h3>
+                <p>تكلفة: $25M • وزن الصاروخ: 20 طن</p>
+            </div>
+        </div>
+
+        <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-muted);">2. المعدات والأنظمة:</h3>
+        <div class="grid-options">
+            <div class="card" id="inst-cam" onclick="toggleInst('cam', 20, 10, 20)">
+                <h3>📷 كاميرات ورادار استشعار</h3>
+                <p>تكلفة: $20M • وزن: 10 طن • استهلاك: 20 kW</p>
+            </div>
+            <div class="card" id="inst-lab" onclick="toggleInst('lab', 30, 15, 30)">
+                <h3>🔬 مختبر تحاليل عينات</h3>
+                <p>تكلفة: $30M • وزن: 15 طن • استهلاك: 30 kW</p>
+            </div>
+            <div class="card" id="inst-solar" onclick="toggleInst('solar', 25, 8, -60)">
+                <h3>☀️ مصفوفة ألواح شمسية</h3>
+                <p>تكلفة: $25M • وزن: 8 طن • توليد طاقة: +60 kW</p>
+            </div>
+        </div>
+
+        <button class="btn-modern" onclick="runSim()" style="margin-top: 15px;">إطلاق المهمة الفضائية 🚀</button>
+    </div>
+
+    <!-- Step 3: Simulation Results -->
+    <div id="step-3" class="step">
+        <h2>تقرير محاكاة المهمة و المقايضات (Trade-offs)</h2>
+        <div id="result-box" class="result-card"></div>
+        <button class="btn-modern" onclick="location.reload()">إعادة المحاولة / مهمة جديدة 🔄</button>
+    </div>
+</div>
+
+<script>
+    let state = {
+        mission: null,
+        maxBudget: 0,
+        budget: 0,
+        mass: 0,
+        maxMass: 0,
+        power: 0,
+        reqPower: 0,
+        rocket: null,
+        instruments: { cam: false, lab: false, solar: false }
+    };
+
+    function selectMission(name, budget, maxMass, reqPower) {
+        state.mission = name;
+        state.maxBudget = budget;
+        state.budget = budget;
+        state.maxMass = maxMass;
+        state.reqPower = reqPower;
+
+        document.getElementById('max-mass-text').innerText = maxMass;
+        document.getElementById('req-power-text').innerText = reqPower;
+
+        document.getElementById('step-1').classList.remove('active');
+        document.getElementById('step-2').classList.add('active');
+        updateUI();
+    }
+
+    function selectRocket(type, cost, mass) {
+        if (state.rocket) {
+            if (state.rocket === 'Heavy') { state.budget += 50; state.mass -= 35; }
+            else { state.budget += 25; state.mass -= 20; }
+            document.getElementById('rocket-Heavy').classList.remove('selected');
+            document.getElementById('rocket-Light').classList.remove('selected');
+        }
+        state.rocket = type;
+        state.budget -= cost;
+        state.mass += mass;
+        document.getElementById('rocket-' + type).classList.add('selected');
+        updateUI();
+        updateAI();
+    }
+
+    function toggleInst(id, cost, mass, powerVal) {
+        let el = document.getElementById('inst-' + id);
+        if (!state.instruments[id]) {
+            state.budget -= cost;
+            state.mass += mass;
+            state.power += powerVal; // القيمة السالبة تزيد الطاقة المتاحة
+            state.instruments[id] = true;
+            el.classList.add('selected');
+        } else {
+            state.budget += cost;
+            state.mass -= mass;
+            state.power -= powerVal;
+            state.instruments[id] = false;
+            el.classList.remove('selected');
+        }
+        updateUI();
+        updateAI();
+    }
+
+    function updateUI() {
+        document.getElementById('budget-text').innerText = state.budget + ' M$';
+        document.getElementById('mass-text').innerText = state.mass;
+        document.getElementById('power-text').innerText = state.power;
+
+        let bPer = Math.max(0, (state.budget / state.maxBudget) * 100);
+        let mPer = Math.min(100, (state.mass / state.maxMass) * 100);
+        let pPer = Math.min(100, Math.max(0, (state.power / state.reqPower) * 100));
+
+        let bBar = document.getElementById('bar-budget');
+        bBar.style.width = bPer + '%';
+        bBar.style.background = bPer < 20 ? 'var(--danger)' : 'var(--success)';
+
+        let mBar = document.getElementById('bar-mass');
+        mBar.style.width = mPer + '%';
+        mBar.style.background = mPer > 90 ? 'var(--danger)' : 'var(--warning)';
+
+        let pBar = document.getElementById('bar-power');
+        pBar.style.width = pPer + '%';
+        pBar.style.background = pPer >= 100 ? 'var(--success)' : 'var(--warning)';
+    }
+
+    function updateAI() {
+        let msg = "";
+        if (!state.rocket) msg = "تنبيه: لا يمكن إطلاق المهمة بدون اختيار صاروخ الإطلاق الأول.";
+        else if (state.budget < 10) msg = "حذر: الميزانية المتبقية ضئيلة جداً!";
+        else if (state.mass > state.maxMass) msg = "خطر: الوزن الحالي تجاوز قدرة الحمولة المسموح بها للصاروخ!";
+        else if (state.power < state.reqPower) msg = "نصيحة: الطاقة المتاحة أقل من المطلوب، أضف ألواح شمسية.";
+        else msg = "ممتاز! متطلبات المهمة متوازنة وجاهزة للإطلاق.";
+        document.getElementById('ai-msg').innerText = msg;
+    }
+
+    function runSim() {
+        document.getElementById('step-2').classList.remove('active');
+        document.getElementById('step-3').classList.add('active');
+
+        let box = document.getElementById('result-box');
+        let success = true;
+        let reasons = [];
+
+        if (!state.rocket) { success = false; reasons.push("لم يتم اختيار صاروخ إطلاق للمهمة."); }
+        if (state.budget < 0) { success = false; reasons.push("تجاوزت الميزانية المتاحة للمشروع."); }
+        if (state.mass > state.maxMass) { success = false; reasons.push("وزن المركبة يتجاوز قدرة الصاروخ على الخروج من الجاذبية."); }
+        if (state.power < state.reqPower) { success = false; reasons.push("الطاقة المتولدة لا تكفي لتشغيل أجهزة المركبة في الفضاء."); }
+
+        if (success) {
+            box.className = "result-card success";
+            box.innerHTML = `
+                <h3 style="color: var(--success);">🎉 نجحت المهمة الفضائية!</h3>
+                <p>وصلت المركبة إلى المدار بنجاح وتم تشغيل جميع الأجهزة العلمية.</p>
+                <p><strong>تحليل المقايضات (Trade-offs):</strong> نجحت في إدارة العلاقة بين الميزانية، والكتلة، وتوليد الطاقة بنسبة كفاءة عالية.</p>
+            `;
+        } else {
+            box.className = "result-card danger";
+            box.innerHTML = `
+                <h3 style="color: var(--danger);">❌ فشلت المهمة الفضائية</h3>
+                <p><strong>أسباب الفشل الهندسية:</strong></p>
+                <ul>${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+                <p style="margin-top: 10px;"><strong>درس في الهندسة:</strong> زيادة المعدات تتطلب دائماً زيادة في الطاقة والوزن، مما يتطلب ميزانية أكبر.</p>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>

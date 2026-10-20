@@ -1,0 +1,386 @@
+:root {
+    --bg-deep: #020617;
+    --primary: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.5);
+    --accent: #06b6d4;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(15, 23, 42, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* خلفية النجوم المتحركة المتطورة */
+.stars-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #06b6d4, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.4;
+    z-index: -1;
+    animation: starsMove 100s linear infinite;
+}
+
+@keyframes starsMove {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 1000px; }
+}
+
+.container {
+    width: 100%;
+    max-width: 950px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 40px;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+    position: relative;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.badge-nasa {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #818cf8;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+header h1 span {
+    background: linear-gradient(135deg, #818cf8, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 4px solid var(--primary);
+    padding-right: 12px;
+}
+
+.section-sub-title {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    margin: 20px 0 12px 0;
+    font-weight: 700;
+}
+
+.header-nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mini-badge {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.grid-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-icon {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    background: rgba(30, 41, 59, 0.9);
+    box-shadow: 0 12px 30px -8px var(--primary-glow);
+}
+
+.card.selected {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.12);
+    box-shadow: 0 12px 30px -8px rgba(16, 185, 129, 0.3);
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: #f1f5f9;
+}
+
+.card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.stats-panel {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 22px;
+}
+
+.stat-group {
+    margin-bottom: 14px;
+}
+
+.stat-group:last-child {
+    margin-bottom: 0;
+}
+
+.stat-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text-muted);
+}
+
+.stat-label strong {
+    color: var(--text-main);
+}
+
+.progress-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.4s ease, background-color 0.3s ease;
+}
+
+.ai-banner {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(6, 182, 212, 0.15));
+    border: 1px solid rgba(79, 70, 229, 0.35);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-modern {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px -5px var(--primary-glow);
+}
+
+.btn-modern:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px var(--primary-glow);
+}
+
+/* شاشة الانيميشن الحية للإطلاق */
+.rocket-stage-container {
+    height: 350px;
+    background: linear-gradient(to top, #090d16, #1e1b4b);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 20px 0;
+    border: 1px solid var(--glass-border);
+}
+
+.launchpad {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20px;
+    background: #334155;
+    border-top: 3px solid var(--accent);
+}
+
+.rocket-object {
+    font-size: 3.5rem;
+    color: #f8fafc;
+    position: absolute;
+    bottom: 25px;
+    transition: bottom 3s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2;
+}
+
+.rocket-fire {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 40px;
+    background: linear-gradient(to bottom, #f59e0b, #ef4444, transparent);
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0;
+}
+
+.rocket-object.launching {
+    bottom: 280px;
+}
+
+.rocket-object.launching .rocket-fire {
+    opacity: 1;
+    height: 70px;
+    animation: flamePulse 0.1s infinite alternate;
+}
+
+@keyframes flamePulse {
+    from { transform: translateX(-50%) scaleY(1); }
+    to { transform: translateX(-50%) scaleY(1.2); }
+}
+
+.telemetry-hud {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(2, 6, 23, 0.85);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    line-height: 1.6;
+}
+
+.result-card {
+    padding: 25px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-card.success {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid var(--success);
+}
+
+.result-card.danger {
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid var(--danger);
+}
+
+.result-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+.event-log-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+
+/* @media screen and (max-width: 600px) {
+
+    .container header h1 {
+        font-size: 2rem;
+    }
+
+    body {
+        background-color: var(--accent);
+    }
+} */
